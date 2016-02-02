@@ -49,7 +49,7 @@ func (c *Client) getJson(apiEndpoint string) ([]byte, error) {
 		return nil, err
 	}
 	if statusCodeErr := checkSuccessfullStatusCode(resp); statusCodeErr != nil {
-		return nil, statusCodeErr
+		return nil, fmt.Errorf("%s: %s", apiEndpoint, statusCodeErr)
 	}
 	defer resp.Body.Close()
 

@@ -3,6 +3,7 @@ package mesoskafka
 import (
 	"sort"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -91,9 +92,11 @@ func resourceMesosKafkaClusterCreate(d *schema.ResourceData, meta interface{}) e
 		return err
 	}
 
-	status, _ := c.ApiBrokersStatus()
-	// TODO: this should probably not be this. just a placeholder
-	d.SetId(status.FrameworkID)
+	brokerIDStrings := make([]string, len(brokerIDs))
+	for i, brokerID := range brokerIDs {
+		brokerIDStrings[i] = strconv.Itoa(brokerID)
+	}
+	d.SetId(strings.Join(brokerIDStrings, ","))
 
 	return resourceMesosKafkaClusterRead(d, meta)
 }
