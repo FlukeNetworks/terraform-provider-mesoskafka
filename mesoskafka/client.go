@@ -105,7 +105,6 @@ func checkSuccessfullStatusCode(resp *http.Response) error {
 }
 
 type Status struct {
-	FrameworkID string   `json:"frameworkId"`
 	Brokers     []Broker `json:"brokers"`
 }
 
@@ -143,7 +142,7 @@ type RebalanceStatus struct {
 }
 
 func (c *Client) ApiBrokersStatus() (*Status, error) {
-	body, e := c.getJson("/api/brokers/status")
+	body, e := c.getJson("/api/broker/list")
 
 	if e != nil {
 		return nil, e
@@ -161,7 +160,7 @@ func (c *Client) ApiBrokersStatus() (*Status, error) {
 func queryStringFromBroker(broker *Broker) string {
 
 	params := url.Values{}
-	params.Add("id", broker.ID)
+	params.Add("broker", broker.ID)
 
 	if broker.Cpus != 0 {
 		params.Add("cpus", strconv.FormatFloat(broker.Cpus, 'f', 6, 64))
@@ -199,7 +198,7 @@ func queryStringFromBroker(broker *Broker) string {
 }
 
 func (c *Client) ApiBrokersAdd(broker *Broker) (*Brokers, error) {
-	url := fmt.Sprintf("/api/brokers/add?%s", queryStringFromBroker(broker))
+	url := fmt.Sprintf("/api/broker/add?%s", queryStringFromBroker(broker))
 	body, e := c.getJson(url)
 
 	if e != nil {
@@ -216,7 +215,7 @@ func (c *Client) ApiBrokersAdd(broker *Broker) (*Brokers, error) {
 }
 
 func (c *Client) ApiBrokersStart(broker *Broker) (*MutateStatus, error) {
-	url := fmt.Sprintf("/api/brokers/start?id=%s", broker.ID)
+	url := fmt.Sprintf("/api/broker/start?broker=%s", broker.ID)
 	body, e := c.getJson(url)
 
 	if e != nil {
@@ -233,7 +232,7 @@ func (c *Client) ApiBrokersStart(broker *Broker) (*MutateStatus, error) {
 }
 
 func (c *Client) ApiBrokersStop(BrokerId int) (*MutateStatus, error) {
-	url := fmt.Sprintf("/api/brokers/stop?id=%d", BrokerId)
+	url := fmt.Sprintf("/api/broker/stop?broker=%d", BrokerId)
 	body, e := c.getJson(url)
 
 	if e != nil {
@@ -250,7 +249,7 @@ func (c *Client) ApiBrokersStop(BrokerId int) (*MutateStatus, error) {
 }
 
 func (c *Client) ApiBrokersRemove(BrokerId int) (*MutateStatus, error) {
-	url := fmt.Sprintf("/api/brokers/remove?id=%d", BrokerId)
+	url := fmt.Sprintf("/api/broker/remove?broker=%d", BrokerId)
 	body, e := c.getJson(url)
 
 	if e != nil {
@@ -267,7 +266,7 @@ func (c *Client) ApiBrokersRemove(BrokerId int) (*MutateStatus, error) {
 }
 
 func (c *Client) ApiBrokerUpdate(broker *Broker) (*MutateStatus, error) {
-	url := fmt.Sprintf("/api/brokers/update?%s", queryStringFromBroker(broker))
+	url := fmt.Sprintf("/api/broker/update?%s", queryStringFromBroker(broker))
 	body, e := c.getJson(url)
 
 	if e != nil {
@@ -327,7 +326,7 @@ func (c *Client) ApiBrokersDelete(BrokerIds []int) error {
 
 // This is a blocking call that returns when a rebalance is complete.
 func (c *Client) ApiBrokerRebalance() error {
-	url := "/api/brokers/rebalance?id=*"
+	url := "/api/broker/rebalance?broker=*"
 	body, e := c.getJson(url)
 
 	if e != nil {
@@ -358,7 +357,7 @@ func (c *Client) ApiBrokerRebalance() error {
 }
 
 func (c *Client) ApiBrokersRebalanceStatus() (*RebalanceStatus, error) {
-	url := "/api/brokers/rebalance"
+	url := "/api/broker/rebalance"
 	body, e := c.getJson(url)
 
 	if e != nil {
