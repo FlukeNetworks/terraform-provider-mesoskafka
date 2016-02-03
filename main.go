@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Banno/terraform-provider-mesoskafka/mesoskafka"
+	"github.com/FlukeNetworks/terraform-provider-mesoskafka/mesoskafka"
 	"github.com/hashicorp/terraform/plugin"
 )
 

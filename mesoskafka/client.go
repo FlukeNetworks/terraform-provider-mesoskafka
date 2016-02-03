@@ -46,7 +46,7 @@ func (c *Client) getFullUrl(apiEndpoint string) string {
 func (c *Client) getJson(apiEndpoint string) ([]byte, error) {
 	resp, err := c.httpClient.Get(c.getFullUrl(apiEndpoint))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%s: %s", apiEndpoint, err)
 	}
 	if statusCodeErr := checkSuccessfullStatusCode(resp); statusCodeErr != nil {
 		return nil, fmt.Errorf("%s: %s", apiEndpoint, statusCodeErr)
